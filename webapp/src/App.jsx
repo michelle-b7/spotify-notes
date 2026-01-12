@@ -249,7 +249,7 @@ const SpotifyNotesSetup = () => {
                 <div className="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-semibold">1</div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Connect Your Spotify Account</h3>
-                  <p className="text-gray-600 text-sm">We'll securely access your playlists using the required PKCE flow.</p>
+                  <p className="text-gray-600 text-sm">We'll securely access your playlists using our PKCE flow.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
