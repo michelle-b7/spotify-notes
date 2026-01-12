@@ -1,5 +1,5 @@
 # Logic: Ignore the local environment file where secrets are kept
-.env
+.env*
 .env.local
 
 # Logic: Ignore dependencies downloaded by npm
