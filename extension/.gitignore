@@ -1,0 +1,13 @@
+# Logic: Ignore the local environment file where secrets are kept
+.env
+.env.local
+
+# Logic: Ignore dependencies downloaded by npm
+node_modules/
+
+# Logic: Ignore the build output folder (generated when you run 'npm run build')
+dist/
+
+# Logic: Ignore OS-specific system files
+.DS_Store
+Thumbs.db
