@@ -4,10 +4,12 @@ import { Music, CheckCircle, Chrome, ArrowRight, Loader } from 'lucide-react';
 // --- PKCE Utility Functions ---
 // These functions are required to securely generate the code challenge and verifier.
 
+//converts decimal # to 2-digit hex string
 function dec2hex(dec) {
   return ('0' + dec.toString(16)).substr(-2);
 }
 
+//creates a secure random string
 function generateRandomString(length) {
   const array = new Uint32Array(length / 2);
   // Using Web Crypto API for secure random strings
@@ -19,29 +21,36 @@ function generateRandomString(length) {
   return Array.from(array, dec2hex).join('');
 }
 
+//Secure hash algorithm 256 bit
 function sha256(plain) {
   const encoder = new TextEncoder();
   const data = encoder.encode(plain);
   return window.crypto.subtle.digest('SHA-256', data);
 }
 
+//Converts SHA 256 into a url safe base64 string
 function base64urlencode(a) {
   // Convert ArrayBuffer to base64url string
   return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
     .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
+//Creates the PKCE code_challenge
 async function generateCodeChallenge(v) {
   const hashed = await sha256(v);
   return base64urlencode(hashed);
 }
 
 // --- Component Implementation ---
-
+//TLDR: Secure OAuth bridge between spotify and Chrome Extension, authenticates user, fetches profile data, and sends token to extension
 const SpotifyNotesSetup = () => {
+  //controls which UI screen the user is viewing
   const [authStep, setAuthStep] = useState('welcome'); // welcome, authenticating, exchanging, success, error
+  //Stores user spotify profile info
   const [userProfile, setUserProfile] = useState(null);
+  //Tracks if extension is installed
   const [extensionInstalled, setExtensionInstalled] = useState(false);
+  //Stores error messages for display
   const [authError, setAuthError] = useState(null);
 
   // Spotify OAuth config - REPLACE WITH YOUR OWN
@@ -96,6 +105,7 @@ const SpotifyNotesSetup = () => {
     setAuthError(null);
 
     // PKCE Generation
+    //protecrtion against CSRF attacks
     const state = generateRandomString(16);
     const code_verifier = generateRandomString(128);
     const code_challenge = await generateCodeChallenge(code_verifier);
@@ -113,6 +123,8 @@ const SpotifyNotesSetup = () => {
       `code_challenge_method=S256&` + // 🟢 PKCE REQUIREMENT
       `code_challenge=${code_challenge}`; // 🟢 PKCE REQUIREMENT
 
+
+    //Redirect after approval
     window.location.href = authUrl;
   };
 
