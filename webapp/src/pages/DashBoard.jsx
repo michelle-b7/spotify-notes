@@ -1,10 +1,12 @@
 import {useEffect, useState} from 'react';
 import {getNewReleases} from '../api/spotifyApi';
+import {useAuth} from '../auth/AuthContext';
 import PlaylistGrid from '../components/PlaylistGrid';
 import SearchBar from '../components/SearchBar';
 import {Music, AlertCircle} from 'lucide-react';
 
-export default function Dashboard({token , onLogout}) {
+export default function Dashboard() {
+  const {token, logout} = useAuth();
   const [albums, setAlbums] = useState([]);
   const [error, setError] = useState(null);
 
@@ -17,14 +19,14 @@ export default function Dashboard({token , onLogout}) {
         setAlbums(data.albums.items);
         } catch (err) {
         if (err.status === 401) {
-            onLogout(); 
+            logout();
         } else {
             setError(err.message);
         }
         }
     }
     load();
-    }, [token, onLogout]);
+    }, [token, logout]);
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -33,12 +35,12 @@ export default function Dashboard({token , onLogout}) {
             <Music className="w-8 h-8" />
             <h1 className="text-2xl font-bold text-gray-900">My Notes</h1>
           </div>
-          <button onClick={onLogout} className="text-sm text-gray-500 hover:text-red-500 font-medium transition-colors">
+          <button onClick={logout} className="text-sm text-gray-500 hover:text-red-500 font-medium transition-colors">
             Logout
           </button>
         </header>
 
-        <SearchBar token={token} />
+        <SearchBar />
 
         <div className="flex items-center gap-2 mb-6">
           <div className="w-2 h-8 bg-green-500 rounded-full" />
@@ -50,7 +52,7 @@ export default function Dashboard({token , onLogout}) {
             <AlertCircle className="w-5 h-5" /> {error}
           </div>
         )}
-        
+
         <PlaylistGrid albums={albums} />
       </div>
     </div>
