@@ -1,9 +1,11 @@
-import {useState} from 'react'; 
-import {Search, Loader} from 'lucide-react'; 
+import {useState} from 'react';
+import {Search, Loader} from 'lucide-react';
 import TrackList from './TrackList';
 import {searchTracks} from '../api/spotifyApi';
+import {useAuth} from '../auth/AuthContext';
 
-export default function SearchBar({token}) {
+export default function SearchBar() {
+  const {token} = useAuth();
   const [query, setQuery] = useState('');
   const [tracks, setTracks] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -30,7 +32,7 @@ export default function SearchBar({token}) {
           {isSearching ? <Loader className="animate-spin w-6 h-6" /> : <Search className="w-6 h-6" />}
         </div>
       </form>
-      <TrackList tracks={tracks} token={token} />
+      <TrackList tracks={tracks} />
     </div>
   );
 }
