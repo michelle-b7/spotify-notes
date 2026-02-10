@@ -1,16 +1,10 @@
 import {useState} from 'react'; 
 import {Music, ChevronRight} from 'lucide-react';
 import Note from '../pages/Note';
-
-// generated once enter is pressed on search 
+import {useNavigate} from 'react-router-dom';
 
 export default function TrackList({tracks, token}) {
-  const [selected, setSelected] = useState(null);
-
-  // if a track is selected, show the Note page
-  if (selected) {
-    return <Note trackId={selected} />;
-  }
+  const navigate = useNavigate();
   // don't render anything if no search has happened yet
   if (!tracks || tracks.length === 0) {
     return null;
@@ -21,7 +15,7 @@ export default function TrackList({tracks, token}) {
       {tracks.map(track => (
         <button
           key={track.id}
-          onClick={() => setSelected(track.id)}
+          onClick={() => navigate(`/note/${track.id}`)}
           className="w-full flex items-center justify-between p-4 bg-white border border-gray-200 rounded-xl hover:shadow-sm transition text-left"
         >
           <div className="flex items-center gap-4">
